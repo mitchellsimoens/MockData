@@ -1,0 +1,23 @@
+{
+    "name": "MockEndpoints",
+    "type": "code",
+    "creator": "Mitchell Simoens",
+    "summary": "Mock data endpoints",
+    "detailedDescription": "The endpoints that will be loaded. Overrides and classes are held in the MockData package, this package is where the data is defined. Endpoints should extend MockData.Endpoint from the MockData package.",
+    "version": "1.0.0",
+    "compatVersion": "1.0.0",
+    "format": "1",
+    "slicer": {
+        "js": [
+            {
+                "path": "${package.dir}/sass/example/custom.js",
+                "isWidgetManifest": true
+            }
+        ]
+    },
+    "output": "${package.dir}/build",
+    "local": true,
+    "requires": [
+        "MockData"
+    ]
+}

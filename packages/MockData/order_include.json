@@ -1,0 +1,8 @@
+[
+    "src/Manager.js",
+    "overrides/data/Connection.js",
+    "overrides/data/JsonP.js",
+    "overrides/direct/RemotingProvider.js",
+    "src/SimXhr.js",
+    "src/Endpoint.js"
+]

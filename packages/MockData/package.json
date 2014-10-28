@@ -1,0 +1,21 @@
+{
+    "name": "MockData",
+    "type": "code",
+    "creator": "Mitchell Simoens",
+    "summary": "Overrides and classes to support mocked data.",
+    "detailedDescription": "Overrides and classes to support mock data. A separate package should be used to define the data in endpoints.",
+    "version": "1.0.0",
+    "compatVersion": "1.0.0",
+    "format": "1",
+    "slicer": {
+        "js": [
+            {
+                "path": "${package.dir}/sass/example/custom.js",
+                "isWidgetManifest": true
+            }
+        ]
+    },
+    "output": "${package.dir}/build",
+    "local": true,
+    "requires": []
+}
