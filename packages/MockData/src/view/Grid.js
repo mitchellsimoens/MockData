@@ -56,5 +56,12 @@ Ext.define('MockData.view.Grid', {
                 return value;
             }
         }
+    ],
+
+    tbar : [
+        {
+            text    : 'Clear',
+            handler : 'clearRequests'
+        }
     ]
 });

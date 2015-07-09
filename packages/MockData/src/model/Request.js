@@ -1,5 +1,5 @@
 Ext.define('MockData.model.Request', {
-    extend : 'MockData.model.Base',
+    extend : 'Ext.data.Model',
 
     fields : [
         'type',

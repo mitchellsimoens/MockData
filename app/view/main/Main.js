@@ -33,6 +33,7 @@ Ext.define('Test.view.main.Main', {
         {
             xtype  : 'tabpanel',
             region : 'center',
+            title  : 'Grid Tests',
             items  : [
                 {
                     xtype : 'test-grid',

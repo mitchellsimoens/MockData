@@ -1,8 +1,4 @@
 Ext.define('MockData.Endpoint', {
-    requires : [
-        'MockData.Manager'
-    ],
-
     endpoints : {},
 
     constructor : function() {

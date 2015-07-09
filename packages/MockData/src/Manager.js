@@ -2,10 +2,7 @@ Ext.define('MockData.Manager', {
     singleton : true,
 
     requires : [
-        'MockData.store.Requests'
-    ],
-
-    uses : [
+        'MockData.Endpoint',
         'MockData.SimXhr'
     ],
 
@@ -180,6 +177,4 @@ Ext.define('MockData.Manager', {
         type    : 'remoting',
         actions : {}
     };
-
-    new MockData.store.Requests();
 });

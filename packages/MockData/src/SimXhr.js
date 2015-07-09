@@ -71,7 +71,7 @@ Ext.define('MockData.SimXhr', {
         var me    = this,
             delay = me.endpoint.delay || 0;
 
-        if (delay) {
+        if (delay !== false) {
             me.timer = setTimeout(function() {
                 me.onTick();
             }, delay);
@@ -92,7 +92,18 @@ Ext.define('MockData.SimXhr', {
                 headers : me.parseObj(me.requestHeaders)
             };
 
-        me.record = store.add(data)[0];
+        data.id = Ext.id(data, 'fiddle-mockdata-request-' + (Math.floor(Math.random() * (50 - 0)) + 0) + '-');
+
+        if (store) {
+            me.record = store.add(data)[0];
+        } else {
+            me.record = data;
+        }
+
+        parent.postMessage({
+            event : 'mockdatarequest_start',
+            data  : data
+        }, '*');
 
         me.body = body;
 
@@ -135,25 +146,50 @@ Ext.define('MockData.SimXhr', {
     },
 
     onTick : function() {
-        var me   = this,
-            type = me.responseXML ? 'xml' : 'json';
+        var me       = this,
+            record   = me.record,
+            endpoint = me.endpoint,
+            config   = endpoint.fn,
+            type     = config.type,
+            data;
 
         me.timer = null;
         me.onComplete();
         me.onreadystatechange && me.onreadystatechange();
 
-        me.record.set({
-            type            : type,
-            delay           : me.endpoint.delay || 0,
-            status          : me.status,
-            statusText      : me.statusText,
-            response        : type === 'json' ? me.responseText : me.responseXML,
-            responseHeaders : me.parseObj(me.responseHeaders)
-        });
+        if (!type) {
+            if (me.responseXML) {
+                type = 'xml';
+            } else {
+                type = 'json';
+            }
+        }
 
-        me.record.commit();
+        if (record) {
+            data = {
+                type            : type,
+                delay           : me.endpoint.delay || 0,
+                status          : me.status,
+                statusText      : me.statusText,
+                response        : me.responseText,
+                responseHeaders : me.parseObj(me.responseHeaders)
+            };
 
-        delete me.record;
+            if (record instanceof Ext.data.Model) {
+                record.set(data, {
+                    commit : true
+                });
+            } else {
+                Ext.apply(record, data);
+            }
+
+            delete me.record;
+
+            parent.postMessage({
+                event : 'mockdatarequest_end',
+                data  : record
+            }, '*');
+        }
     },
 
     exec : function() {
@@ -200,7 +236,14 @@ Ext.define('MockData.SimXhr', {
             me.responseXML  = me.parseXmlString(data);
         } else {
             if (type === 'json') {
-                data = Ext.encode(data);
+                if (!Ext.isString(data)) {
+                    data = Ext.encode(data);
+                }
+
+                data = data;
+            } else if (type === 'string') {
+                //restore newlines
+                data = data.replace('%0A', '\n');
             }
 
             me.responseXML  = null;
@@ -226,7 +269,9 @@ Ext.define('MockData.SimXhr', {
         type = type || 'json';
 
         if (type) {
-            if (type !== 'json' && type !== 'xml' && type !== 'string') {
+            if (type === 'plaintext') {
+                type = 'string';
+            } else if (type !== 'json' && type !== 'xml' && type !== 'string') {
                 type = 'json';
             }
         }

@@ -2,6 +2,19 @@ Ext.define('MockData.view.Controller', {
     extend : 'Ext.app.ViewController',
     alias  : 'controller.mockdata-controller',
 
+    init : function() {
+        var me    = this,
+            grid  = me.lookupReference('requestgrid'),
+            store = grid.getStore();
+
+        me.mon(store, {
+            scope       : me,
+            datachanged : me.updateRequestTitle
+        });
+
+        me.updateRequestTitle(store);
+    },
+
     onRequestSelectionChange : function(selModel, selected) {
         var detail   = this.lookupReference('requestdetail'),
             request  = this.lookupReference('requesttab'),
@@ -27,5 +40,27 @@ Ext.define('MockData.view.Controller', {
             request.update({});
             response.setValue('');
         }
+    },
+
+    clearRequests : function() {
+        var grid = this.lookupReference('requestgrid');
+
+        grid.getStore().removeAll();
+    },
+
+    updateRequestTitle : function(store) {
+        var panel        = this.getView(),
+            initialTitle = panel.initialTitle,
+            count        = store.getCount();
+
+        if (!initialTitle) {
+            initialTitle = panel.initialTitle = panel.title;
+        }
+
+        if (count) {
+            initialTitle += ' (' + count + ')';
+        }
+
+        panel.setTitle(initialTitle);
     }
 });
